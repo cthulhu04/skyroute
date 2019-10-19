@@ -2,6 +2,7 @@ from graph_search import *
 from vc_metro import *
 from vc_landmarks import *
 from landmark_choices import *
+import itertools
 
 landmark_string = ''
 
@@ -13,7 +14,7 @@ def greet():
 	print("We'll help you find the shortest route between the following Vancouver landmarks:\n" + landmark_string)
 
 def new_route(start_point=None, end_point=None):
-	pass
+	start_point, end_point = set_start_and_end(start_point, end_point)
 
 def set_start_and_end(start_point, end_point):
 	if start_point:
@@ -48,5 +49,19 @@ def get_end():
 		print("Sorry, that's not a landmark we have data on. Let's try this again...")
 		get_end()
 
+def get_route(start_point, end_point):
+	start_stations = vc_landmarks[start_point]
+	end_stations = vc_landmarks[end_point]
+	routes = []
+	for start_station in start_stations:
+		for end_station in end_stations:
+			route = bfs(vc_metro, start_station, end_station)
+			if route:
+				routes.append(route)
+	return min(routes, key=len)
+
+
+
 #skyroute()
-print(set_start_and_end(None, None))
+#print(set_start_and_end(None, None))
+print(get_route('Marine Building', 'Science World'))
