@@ -5,6 +5,7 @@ from landmark_choices import *
 import itertools
 
 landmark_string = ''
+stations_under_constructions = ['Vancouver City Centre', 'Edmonds']
 
 def skyroute():
 	greet()
@@ -86,7 +87,15 @@ def goodbye():
 def get_active_stations():
 	updated_metro = vc_metro
 	for station in stations_under_constructions:
-		
+		for current_station, neighboring_stations in vc_metro.items():
+			if current_station not in stations_under_constructions:
+				updated_metro[current_station] -= set(stations_under_constructions)
+			else:
+				updated_metro[current_station] = set([])
+	return updated_metro
 
-skyroute()
-#print(get_route('Marine Building', 'Science World'))
+
+
+
+#skyroute()
+print(get_active_stations())
