@@ -8,6 +8,9 @@ landmark_string = ''
 
 def skyroute():
 	greet()
+	show_landmarks()
+	new_route()
+	goodbye()
 
 def greet():
 	print("Hi there and welcome to SkyRoute!")
@@ -15,6 +18,17 @@ def greet():
 
 def new_route(start_point=None, end_point=None):
 	start_point, end_point = set_start_and_end(start_point, end_point)
+	shortest_route = get_route(start_point, end_point)
+	if shortest_route:
+		shortest_route_string = '\n'.join(shortest_route)
+		print("The shortest metro route from {0} to {1} is:\n{2}".format(start_point, end_point, shortest_route_string))
+	else:
+		print("Unfortunately, there is currently no path between {0} and {1} due to maintenance.".format(start_point, end_point))
+	again = input("Would you like to see another route? Enter y/n: ")
+	if again == 'y':
+		show_landmarks()
+		new_route(start_point, end_point)
+
 
 def set_start_and_end(start_point, end_point):
 	if start_point:
@@ -60,8 +74,19 @@ def get_route(start_point, end_point):
 				routes.append(route)
 	return min(routes, key=len)
 
+def show_landmarks():
+	see_landmarks = input("Would you like to see the list of landmarks? Enter y/n: ")
+	if see_landmarks == 'y':
+		for landmark in landmark_choices:
+			print(landmark + ': ' + landmark_choices[landmark])
 
+def goodbye():
+	print('Thanks for using SkyRoute!')
 
-#skyroute()
-#print(set_start_and_end(None, None))
-print(get_route('Marine Building', 'Science World'))
+def get_active_stations():
+	updated_metro = vc_metro
+	for station in stations_under_constructions:
+		
+
+skyroute()
+#print(get_route('Marine Building', 'Science World'))
