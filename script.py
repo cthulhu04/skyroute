@@ -109,4 +109,34 @@ def get_active_stations():
 def goodbye():
 	print('Thanks for using SkyRoute!')
 
+def add_station_under_construction():
+	station = input('Please, enter the station which is under construction now: ')
+	if is_valid_station(station):
+		stations_under_constructions.append(station)
+	else:
+		print('It seems like this is not valid station. Please, try again!')
+		add_station_under_construction()
+	again = input('Would you like to add another station? Enter y/n')
+	if again == 'y':
+		add_station_under_construction()
+
+def remove_station_under_construction():
+	station = input('Please, enter the station which has been repared: ')
+	if is_valid_station(station):
+		stations_under_constructions.remove(station)
+	else:
+		print('It seems like this is not valid station. Please, try again!')
+		remove_station_under_construction()
+	again = input('Would you like to add another station? Enter y/n')
+	if again == 'y':
+		remove_station_under_construction()
+
+def is_valid_station(station):
+	for landmark in vc_landmarks:
+		for current_station in vc_landmarks[landmark]:
+			if current_station == station:
+				return True
+	return False
+
+
 skyroute()
