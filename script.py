@@ -2,9 +2,7 @@ from graph_search import *
 from vc_metro import *
 from vc_landmarks import *
 from landmark_choices import *
-import itertools
 
-landmark_string = ''
 stations_under_constructions = ['Vancouver City Centre', 'Edmonds']
 
 def skyroute():
@@ -15,7 +13,7 @@ def skyroute():
 
 def greet():
 	print("Hi there and welcome to SkyRoute!")
-	print("We'll help you find the shortest route between the following Vancouver landmarks:\n" + landmark_string)
+	print("We'll help you find the shortest route between any of Vancouver landmarks.")
 
 def new_route(start_point=None, end_point=None):
 	start_point, end_point = set_start_and_end(start_point, end_point)
@@ -45,6 +43,9 @@ def set_start_and_end(start_point, end_point):
 			set_start_and_end(start_point, end_point)
 	else:
 		start_point, end_point = get_start(), get_end()
+		if start_point == end_point:
+			print('Your origin and destination are the same! Please, pick another landmarks.')
+			set_start_and_end(start_point, end_point)
 
 	return start_point, end_point
 
@@ -70,9 +71,14 @@ def get_route(start_point, end_point):
 	routes = []
 	for start_station in start_stations:
 		for end_station in end_stations:
-			route = bfs(vc_metro, start_station, end_station)
+			metro_system = update_metro_system(start_station, end_station)
+
+			if not metro_system:
+				return None 
+			route = bfs(metro_system, start_station, end_station)
 			if route:
 				routes.append(route)
+
 	return min(routes, key=len)
 
 def show_landmarks():
@@ -81,8 +87,14 @@ def show_landmarks():
 		for landmark in landmark_choices:
 			print(landmark + ': ' + landmark_choices[landmark])
 
-def goodbye():
-	print('Thanks for using SkyRoute!')
+def update_metro_system(start_station, end_station):
+	if stations_under_constructions:
+		metro_system = get_active_stations()
+		possible_route = dfs(metro_system, start_station, end_station)
+		if not possible_route:
+			return None
+	else:
+		return vc_metro
 
 def get_active_stations():
 	updated_metro = vc_metro
@@ -94,8 +106,7 @@ def get_active_stations():
 				updated_metro[current_station] = set([])
 	return updated_metro
 
+def goodbye():
+	print('Thanks for using SkyRoute!')
 
-
-
-#skyroute()
-print(get_active_stations())
+skyroute()
